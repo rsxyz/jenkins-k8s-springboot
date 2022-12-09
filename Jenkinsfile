@@ -2,8 +2,8 @@
 pipeline {
 	agent any
 
-	environment {
-		mvnHome=tool 'myMaven'
+	tools {
+         'myMaven'
 	}
 
 	stages {

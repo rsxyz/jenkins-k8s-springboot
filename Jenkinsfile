@@ -3,9 +3,7 @@ pipeline {
 	agent any
 
 	environment {
-		dockerHome = tool 'myDocker'
-		mavenHome  = tool 'myMaven'
-		PATH = "$dockerHome/bin:$mavenHome/bin:$PATH"
+		tool 'myMaven'
 	}
 
 	stages {
@@ -42,23 +40,17 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    dockerImage = docker.build("rsxyz123/hello-springboot:${env.BUILD_ID}")
-                }
+                sh "docker build -t rsxyz123/hello-springboot:${env.BUILD_ID} ."
             }
-            
         }
 
         stage('Push Docker Image') {
             steps {
-                script {
-                    docker.withRegistry( '', 'dockerhub' ) {
-                        dockerImage.push()
-                        dockerImage.push('latest')
-                    }
+                withCredentials([string(credentialsId: 'DOCKER_PWD', variable: 'dockerPassword')]) {
+                    sh 'docker login -u rsxyz123 -p $dockerPassword'
                 }
-            }
-            
+                sh "docker push rsxyz123/hello-springboot:${env.BUILD_ID}"
+            } 
         }
 
         stage('Deploy App') {

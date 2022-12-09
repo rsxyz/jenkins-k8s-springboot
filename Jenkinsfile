@@ -49,15 +49,18 @@ pipeline {
                     sh 'docker login -u rsxyz123 -p $dockerPassword'
                 }
                 sh "docker push rsxyz123/hello-springboot:${env.BUILD_ID}"
-                sh "docker push rsxyz123/hello-springboot:latest"
             } 
         }
 
         stage('Deploy App') {
             steps {
                 withKubeConfig(credentialsId: 'KUBECONFIG') {
+                    script{
+                        imageName = "rsxyz123/hello-springboot:${env.BUILD_ID}"
+                    }
                     sh "kubectl get nodes"
                     sh "kubectl get pods"
+                    sh "sed -i 's#replace#${imageName}#g' k8s-hello-springboot.yaml"
                     sh "cat k8s-hello-springboot.yaml"
                     sh "kubectl apply -f k8s-hello-springboot.yaml"
                     sh "kubectl get all"

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: hello-springboot
-        image: rsxyz123/hello-springboot
+        image: replace
         ports:
         - containerPort: 8090
 

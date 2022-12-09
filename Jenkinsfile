@@ -3,7 +3,7 @@ pipeline {
 	agent any
 
 	environment {
-		tool 'myMaven'
+		mvnHome=tool 'myMaven'
 	}
 
 	stages {

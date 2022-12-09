@@ -49,6 +49,7 @@ pipeline {
                     sh 'docker login -u rsxyz123 -p $dockerPassword'
                 }
                 sh "docker push rsxyz123/hello-springboot:${env.BUILD_ID}"
+                sh "docker push rsxyz123/hello-springboot:latest"
             } 
         }
 
@@ -58,7 +59,7 @@ pipeline {
                     sh "kubectl get nodes"
                     sh "kubectl get pods"
                     sh "cat k8s-hello-springboot.yaml"
-                    sh "kubectl  apply -f k8s-hello-springboot.yaml"
+                    sh "kubectl apply -f k8s-hello-springboot.yaml"
                     sh "kubectl get all"
                 }
             }

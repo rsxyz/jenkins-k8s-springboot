@@ -2,6 +2,9 @@
 pipeline {
 	agent any
 
+    tools{
+        maven "myMaven"
+    }
 	stages {
 		
 		stage('Checkout') {
@@ -24,16 +27,12 @@ pipeline {
         stage('mvn Build'){
             steps {
                 sh "java -version"
-                withMaven(maven : 'myMaven') {
-                    sh 'mvn clean compile'
-                }
+                sh 'mvn clean compile'
             }
         }
         stage('mvn Package'){
             steps {
-                withMaven(maven : 'myMaven') {
                     sh 'mvn package -DskipTests'
-                }
                     archiveArtifacts artifacts: 'target/*', fingerprint: true
             }	
         }
